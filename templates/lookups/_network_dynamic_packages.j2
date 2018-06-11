@@ -1,0 +1,15 @@
+{% set network_dynamic_packages_tpl = [] %}
+{% if network_interfaces|d() %}
+{%   for iface, params in network_interfaces.iteritems() %}
+{%     if (params.state | d('present') == 'present' and params.type | d()) %}
+{%       if params.type == 'vlan' %}
+{%         set _ = network_dynamic_packages_tpl.append('vlan') %}
+{%       elif params.type == 'bridge' %}
+{%         set _ = network_dynamic_packages_tpl.append('bridge-utils') %}
+{%       elif params.type == 'bond' %}
+{%         set _ = network_dynamic_packages_tpl.append('ifenslave') %}
+{%       endif %}
+{%     endif %}
+{%   endfor %}
+{% endif %}
+{{ network_dynamic_packages_tpl | unique | to_yaml }}

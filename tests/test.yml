@@ -1,0 +1,21 @@
+---
+- hosts: all
+  connection: local
+  roles:
+    - ansible-role-network
+  post_tasks:
+    - name: read /etc/network/interfaces
+      command: /bin/cat /etc/network/interfaces
+      register: network_interfaces_file
+    - name: print /etc/network/interfaces
+      debug:
+        var: network_interfaces_file.stdout_lines
+    - name: read the interface files
+      command: "/bin/cat {{ item.dest }}"
+      register: network_interfaces_files
+      with_items: '{{ network_interfaces_changed.results }}'
+      when: item is changed
+    - name: dump the interface files
+      debug:
+        var: item.stdout_lines
+      with_items: '{{ network_interfaces_files.results }}'

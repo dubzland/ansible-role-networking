@@ -1,0 +1,14 @@
+FROM debian:stretch
+
+RUN apt-get update && apt-get install -y \
+      ansible
+
+WORKDIR /usr/src/ansible-role-network
+
+RUN mkdir -p /usr/src/ansible-role-network
+
+ADD . /usr/src/ansible-role-network
+
+ENV ANSIBLE_CONFIG=/usr/src/ansible-role-network/tests/ansible.cfg
+
+CMD ["ansible-playbook", "/usr/src/ansible-role-network/tests/test.yml"]

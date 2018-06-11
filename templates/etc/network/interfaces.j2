@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# Load individual interface definitions
+source /etc/network/interfaces.d/*
