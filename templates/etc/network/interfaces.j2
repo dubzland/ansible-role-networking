@@ -3,6 +3,15 @@
 # The loopback network interface
 auto lo
 iface lo inet loopback
+{% for group in network__derived_interfaces|sort_multi("weight","name") %}
+{%   for interface in ([group.primary] | union(group.aliases)) %}
 
-# Load individual interface definitions
-source /etc/network/interfaces.d/*
+{%     if interface.auto == 'yes' %}
+auto {{ interface.name }}
+{%     endif %}
+iface {{ interface.name }} inet {{ interface.inet }}
+{%     for option in interface.options %}
+    {{ option }}
+{%     endfor %}
+{%   endfor %}
+{% endfor %}

@@ -1,0 +1,23 @@
+---
+- name: assemble network interfaces
+  set_fact:
+    network__derived_interfaces: '{{ lookup("template", "lookups/_derived_network_interfaces.j2", convert_data=False) | from_yaml }}'
+
+- name: create the configuration directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - /etc/network/
+
+- name: create /etc/network/interfaces.new
+  template:
+    src: etc/network/interfaces.j2
+    dest: /etc/network/interfaces.new
+    owner: root
+    group: root
+    mode: 0644
+  notify: sync network config

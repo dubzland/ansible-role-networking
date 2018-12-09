@@ -1,58 +1,9 @@
 ---
-- name: dump the network interfaces
-  debug:
-    var: network_interfaces
+- import_tasks: vars.yml
+  tags: network
 
-- name: dump the base packages to be installed
-  debug:
-    var: _network_base_packages
+- import_tasks: packages.yml
+  tags: network
 
-- name: dump the dynamic packages to be installed
-  debug:
-    var: _network_dynamic_packages
-
-- name: dump the packages to be installed
-  debug:
-    var: _network_packages_combined
-
-#- name: install required packages
-#  package:
-#    name: '{{ item }}'
-#    state: present
-#  with_items: '{{ _network_packages_combined }}'
-#
-- name: create the configuration directory
-  file:
-    path: '/etc/network/interfaces.d'
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-
-- name: protect /etc/network/interfaces
-  command: dpkg-divert --local --quiet --divert /etc/network/interfaces.dpkg --rename /etc/network/interfaces
-  args:
-    creates: /etc/network/interfaces.dpkg
-
-- name: create /etc/network/interfaces
-  template:
-    src: etc/network/interfaces.j2
-    dest: /etc/network/interfaces
-    owner: root
-    group: root
-    mode: 0644
-
-- name: create interface drop-ins
-  template:
-    src: 'etc/network/interfaces.d/iface.j2'
-    dest: '/etc/network/interfaces.d/{{ item.key }}.conf'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  with_dict: '{{ network_interfaces }}'
-  register: network_interfaces_changed
-
-- name: print the changed interfaces
-  debug:
-    var: network_interfaces_changed
-
+- import_tasks: interfaces.yml
+  tags: network

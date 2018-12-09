@@ -1,0 +1,29 @@
+#!/bin/bash
+
+systemd_init() {
+	if [ -d /run/systemd/system ]; then
+		return 0
+	else
+		return 1
+	fi
+}
+
+stop_networking() {
+	if systemd_init; then
+		systemctl stop networking.service
+	else
+		service networking stop
+	fi
+}
+
+start_networking() {
+	if systemd_init; then
+		systemctl start networking.service
+	else
+		service networking start
+	fi
+}
+
+stop_networking
+mv /etc/network/interfaces.new /etc/network/interfaces
+start_networking

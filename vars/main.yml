@@ -1,4 +1,10 @@
 ---
-_network_base_packages: ['resolvconf', 'bsdutils']
-_network_dynamic_packages: '{{ lookup("template", "lookups/_network_dynamic_packages.j2", convert_data=False) | from_yaml }}'
-_network_packages_combined: '{{ _network_base_packages | union(_network_dynamic_packages) | union(network_packages) | unique }}'
+network__base_packages: ['resolvconf', 'bsdutils', 'rsync']
+network__dynamic_packages: '{{ lookup("template", "lookups/_network_dynamic_packages.j2", convert_data=False) | from_yaml }}'
+network__interface_weights: {
+  "eth": '10',
+  "ucarp": '20',
+  "vlan": '30',
+  "bridge": '40',
+  "bond": '50'
+}

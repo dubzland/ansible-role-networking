@@ -1,0 +1,68 @@
+{% set derived_network_interfaces_tpl = [] %}
+{% if network_interfaces | d() %}
+{%   for iface, params in network_interfaces.iteritems() %}
+{%     set interface = {"name": iface, "weight": network__interface_weights[params.type | d('eth')], "aliases": []} %}
+{%     set primary = {"name": iface, "inet": params.inet} %}
+{%     set _ = primary.update({"auto": params.auto | d('yes')}) %}
+{%     set _ = primary.update({"aliases": [], "options": []}) %}
+{%     if (params.address | d()) %}
+{%       set _ = primary.options.append("address " + (params.address | ipaddr('address'))) %}
+{%       set _ = primary.options.append("netmask " + (params.address | ipaddr('netmask'))) %}
+{%     endif %}
+{%     if (params.gateway | d()) %}
+{%       set _ = primary.options.append("gateway " + params.gateway) %}
+{%     endif %}
+{%     if (params.dns_nameservers | d()) %}
+{%       set _ = primary.options.append("dns-nameservers " + (params.dns_nameservers | join(' '))) %}
+{%     endif %}
+{%     if (params.dns_search | d()) %}
+{%       set _ = primary.options.append("dns-search " + (params.dns_search | join(' '))) %}
+{%     endif %}
+{%     if params.type | d() and params.type == 'bridge' %}
+{%       for attr in params.keys() | sort %}
+{%         if attr.startswith('bridge_') and params[attr] != None %}
+{%           if params[attr] is iterable and params[attr] is not string %}
+{%             set _ = primary.options.append(attr + " " + (params[attr] | join(' '))) %}
+{%           else %}
+{%             set _ = primary.options.append(attr + " " + (params[attr] | string)) %}
+{%           endif %}
+{%         endif %}
+{%       endfor %}
+{%     endif %}
+{%     if params.type | d() and params.type == 'bond' %}
+{%       if params.slaves | d() %}
+{%         set _ = primary.options.append("bond-slaves " + (params.slaves | join(' '))) %}
+{%       endif %}
+{%       for attr in params.keys() | sort %}
+{%         if attr.startswith('bond_') and params[attr] != None %}
+{%           if params[attr] is iterable and params[attr] is not string %}
+{%             set _ = primary.options.append((attr | replace('_', '-')) + " " + (params[attr] | join(' '))) %}
+{%           else %}
+{%             set _ = primary.options.append((attr | replace('_', '-')) + " " + (params[attr] | string)) %}
+{%           endif %}
+{%         endif %}
+{%       endfor %}
+{%     endif %}
+{%     if params.ucarp | d() %}
+{%       if (params.ucarp.vid | d()) and (params.ucarp.vip | d()) and (params.ucarp.password | d()) and (params.ucarp.advskew | d()) and (params.ucarp.advbase | d()) and (params.ucarp.master | d()) %}
+{%         set ucarp_iface = {"name": iface + ":ucarp", "auto": "no", "inet":
+  "static", "weight": network__interface_weights.ucarp, "options": []} %}
+{%         set _ = ucarp_iface.options.append("address " + (params.ucarp.vip | ipaddr('address'))) %}
+{%         set _ = ucarp_iface.options.append("netmask " + (params.ucarp.vip | ipaddr('netmask'))) %}
+{%         if (params.ucarp.gateway | d()) %}
+{%         set _ = ucarp_iface.options.append("gateway " + (params.ucarp.gateway | ipaddr('address'))) %}
+{%         endif %}
+{%         set _ = interface.aliases.append(ucarp_iface) %}
+{%         set _ = primary.options.append("ucarp-vip " + (params.ucarp.vip | ipaddr('address'))) %}
+{%         set _ = primary.options.append("ucarp-vid " + (params.ucarp.vid | string)) %}
+{%         set _ = primary.options.append("ucarp-password " + params.ucarp.password) %}
+{%         set _ = primary.options.append("ucarp-advskew " + (params.ucarp.advskew | string)) %}
+{%         set _ = primary.options.append("ucarp-advbase " + (params.ucarp.advbase | string)) %}
+{%         set _ = primary.options.append("ucarp-master " + ("yes" if params.ucarp.master else "no")) %}
+{%       endif %}
+{%     endif %}
+{%     set _ = interface.update({"primary": primary}) %}
+{%     set _ = derived_network_interfaces_tpl.append(interface) %}
+{%   endfor %}
+{% endif %}
+{{ derived_network_interfaces_tpl | to_yaml }}

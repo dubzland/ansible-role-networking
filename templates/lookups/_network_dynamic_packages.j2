@@ -8,6 +8,8 @@
 {%         set _ = network_dynamic_packages_tpl.append('bridge-utils') %}
 {%       elif params.type == 'bond' %}
 {%         set _ = network_dynamic_packages_tpl.append('ifenslave') %}
+{%       elif params.type == 'eth' and params.ucarp | d() %}
+{%         set _ = network_dynamic_packages_tpl.append('ucarp') %}
 {%       endif %}
 {%     endif %}
 {%   endfor %}

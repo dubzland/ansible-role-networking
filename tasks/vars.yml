@@ -1,0 +1,7 @@
+---
+- name: check for required variables
+  fail:
+    msg: "Variable '{{ item }}' is required, but undefined"
+  when: item not in vars
+  with_items:
+    - network_interfaces

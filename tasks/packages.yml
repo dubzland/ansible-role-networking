@@ -1,0 +1,10 @@
+---
+- name: assemble list of packages to be installed
+  set_fact:
+    _network_packages_combined: '{{ network__base_packages | union(network__dynamic_packages) | union(network_packages) | unique }}'
+
+- name: install required packages
+  package:
+    name: '{{ item }}'
+    state: present
+  with_items: '{{ _network_packages_combined }}'

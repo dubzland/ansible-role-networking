@@ -1,2 +1,5 @@
 ---
-# handlers file for ansible-role-network
+- name: sync network config
+  environment:
+    LC_ALL: 'C'
+  script: script/sync_networking

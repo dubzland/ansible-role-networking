@@ -1,43 +1,12 @@
 # {{ ansible_managed }}
-{% set interface = item.value %}
-{% set interface_name = item.key %}
-auto {{ interface_name }}
-iface {{ interface_name }} inet {{ interface.inet }}
-{% if interface.address is defined and interface.address %}
-	address {{ interface.address | ipaddr('address') }}
-	netmask {{ interface.address | ipaddr('netmask') }}
-{% endif %}
-{% if interface.gateway | d() %}
-	gateway {{ interface.gateway }}
-{% endif %}
-{% if interface.dns_nameservers | d() %}
-	dns-nameservers {{ interface.dns_nameservers | join(' ') }}
-{% endif %}
-{% if interface.dns_search | d() %}
-	dns-search {{ interface.dns_search | join(' ') }}
-{% endif %}
-{% if interface.type | d() and interface.type == 'bridge' %}
-{%   for attr in interface.keys() | sort %}
-{%     if attr.startswith('bridge_') and interface[attr] != None %}
-{%       if interface[attr] is iterable and interface[attr] is not string %}
-	{{ attr }} {{ interface[attr] | join(' ') }}
-{%       else %}
-	{{ attr }} {{ interface[attr] }}
-{%       endif %}
+{% for group in _derived_network_interfaces|dictsort(False, 'weight') %}
+{%   for interface in ([group.primary] | union(group.aliases)) %}
+{%     if interface.auto %}
+auto {{ interface.name }}
 {%     endif %}
+iface {{ interface.name }} inet {{ interface.inet }}
+{%     for option in interface.options %}
+    {{ option }}
+{%     endfor %}
 {%   endfor %}
-{% endif %}
-{% if interface.type | d() and interface.type == 'bond' %}
-{%   if interface.slaves | d() %}
-	slaves {{ interface.slaves if interface.slaves is string else interface.slaves | join(' ') }}
-{%   endif %}
-{%   for attr in interface.keys() | sort %}
-{%     if attr.startswith('bond_') and interface[attr] != None %}
-{%       if interface[attr] is iterable and interface[attr] is not string %}
-	{{ attr | replace('_', '-') }} {{ interface[attr] | join(' ') }}
-{%       else %}
-	{{ attr | replace('_', '-') }} {{ interface[attr] }}
-{%       endif %}
-{%     endif %}
-{%   endfor %}
-{% endif %}
+{% endfor %}
