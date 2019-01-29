@@ -1,14 +1,14 @@
 {% set network_dynamic_packages_tpl = [] %}
 {% if network_interfaces|d() %}
-{%   for iface, params in network_interfaces.iteritems() %}
-{%     if (params.state | d('present') == 'present' and params.type | d()) %}
-{%       if params.type == 'vlan' %}
+{%   for iface in network_interfaces %}
+{%     if (iface.state | d('present') == 'present' and iface.type | d()) %}
+{%       if iface.type == 'vlan' %}
 {%         set _ = network_dynamic_packages_tpl.append('vlan') %}
-{%       elif params.type == 'bridge' %}
+{%       elif iface.type == 'bridge' %}
 {%         set _ = network_dynamic_packages_tpl.append('bridge-utils') %}
-{%       elif params.type == 'bond' %}
+{%       elif iface.type == 'bond' %}
 {%         set _ = network_dynamic_packages_tpl.append('ifenslave') %}
-{%       elif params.type == 'eth' and params.ucarp | d() %}
+{%       elif iface.type == 'eth' and iface.ucarp | d() %}
 {%         set _ = network_dynamic_packages_tpl.append('ucarp') %}
 {%       endif %}
 {%     endif %}
