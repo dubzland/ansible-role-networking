@@ -25,5 +25,5 @@ start_networking() {
 }
 
 stop_networking
-mv /etc/network/interfaces.new /etc/network/interfaces
+cp /etc/network/interfaces.ansible /etc/network/interfaces
 start_networking

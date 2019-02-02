@@ -13,10 +13,10 @@
   with_items:
     - /etc/network/
 
-- name: create /etc/network/interfaces.new
+- name: create /etc/network/interfaces.ansible
   template:
     src: etc/network/interfaces.j2
-    dest: /etc/network/interfaces.new
+    dest: /etc/network/interfaces.ansible
     owner: root
     group: root
     mode: 0644
