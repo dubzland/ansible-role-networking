@@ -3,8 +3,8 @@ network__base_packages: ['resolvconf', 'bsdutils', 'rsync']
 network__dynamic_packages: '{{ lookup("template", "lookups/_network_dynamic_packages.j2", convert_data=False) | from_yaml }}'
 network__interface_weights: {
   "eth": '10',
-  "bond": '20'
+  "bond": '20',
   "bridge": '30',
   "ucarp": '40',
-  "vlan": '50',
+  "vlan": '50'
 }
