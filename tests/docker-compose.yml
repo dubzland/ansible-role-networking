@@ -5,4 +5,4 @@ services:
       context: ../.
       dockerfile: tests/Dockerfile.debian
     volumes:
-      - ../:/usr/src/ansible-role-network
+      - ../:/usr/src/dubzland-network

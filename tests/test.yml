@@ -2,4 +2,4 @@
 - hosts: all
   connection: local
   roles:
-    - ansible-role-network
+    - dubzland-network
