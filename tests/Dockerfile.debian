@@ -5,6 +5,7 @@ RUN apt-get update && \
 	apt-get install -y \
 		debconf-utils \
 		gnupg \
+		python-apt \
 		python-jmespath \
 		python-netaddr && \
 	echo 'resolvconf resolvconf/linkify-resolvconf boolean false' | debconf-set-selections && \

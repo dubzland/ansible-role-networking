@@ -2,7 +2,7 @@ all:
   hosts:
     host1:
       network_interfaces:
-        eth0:
+        - name: eth0
           type: eth
           inet: static
           address: 10.0.1.13/24
@@ -10,10 +10,10 @@ all:
           dns_nameservers: "{{ vlans['lan'].nameservers }}"
           dns_search:
             - "{{ vlans['lan'].domain_name }}"
-        eth1:
+        - name: eth1
           type: eth
           inet: manual
-        vbr0:
+        - name: vbr0
           type: bridge
           inet: dhcp
           bridge_ports:
@@ -21,13 +21,13 @@ all:
           bridge_stp: 'off'
           bridge_fd: 0
           bridge_vlan_aware: 'yes'
-        eth2:
+        - name: eth2
           type: eth
           inet: manual
-        eth3:
+        - name: eth3
           type: eth
           inet: manual
-        bond0:
+        - name: bond0
           type: bond
           inet: static
           bond_slaves:
@@ -36,14 +36,14 @@ all:
           bond_mode: 802.3ad
           bond_miimon: 100
           bond_lacp_rate: 1
-        eth5:
+        - name: eth5
           type: eth
           inet: manual
-        eth5.10:
+        - name: eth5.10
           type: vlan
           inet: static
           address: 10.0.1.11/24
-        eth6:
+        - name: eth6
           type: eth
           inet: static
           address: 10.0.1.12/24
