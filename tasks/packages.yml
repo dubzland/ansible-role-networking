@@ -1,10 +1,17 @@
 ---
+- name: determine if proxmox is installed
+  package_facts:
+    manager: "auto"
+  tags: network
+
 - name: assemble list of packages to be installed
   set_fact:
     _network_packages_combined: '{{ network__base_packages | union(network__dynamic_packages) | union(network_packages) | unique }}'
+  tags: network
 
 - name: install required packages
   package:
     name: '{{ item }}'
     state: present
   with_items: '{{ _network_packages_combined }}'
+  tags: network

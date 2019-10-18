@@ -5,3 +5,4 @@
   when: item not in vars
   with_items:
     - network_interfaces
+  tags: network
