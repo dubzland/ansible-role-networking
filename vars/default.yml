@@ -4,7 +4,7 @@ dubzland_network_base_packages:
   - bsdutils
   - rsync
 
-dubzland_network_dynamic_packages: '{{ lookup("template", "lookups/_network_dynamic_packages.j2", convert_data=False) | from_yaml }}'
+dubzland_network_dynamic_packages: '{{ lookup("template", "{{ role_path }}/lookups/_network_dynamic_packages.j2", convert_data=False) | from_yaml }}'
 dubzland_network_interface_weights: {
   "eth": '10',
   "bond": '20',
