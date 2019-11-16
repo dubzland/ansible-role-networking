@@ -1,18 +1,4 @@
 ---
-- name: determine if proxmox is installed
-  package_facts:
-    manager: "auto"
-  tags: network
-
-- name: assemble list of packages to be installed
-  set_fact:
-    dubzland_network_packages_combined: '{{
-      dubzland_network_base_packages |
-      union(dubzland_network_dynamic_packages) |
-      union(dubzland_network_packages) | unique
-    }}'
-  tags: network
-
 - name: install required packages
   package:
     name: '{{ dubzland_network_packages_combined }}'

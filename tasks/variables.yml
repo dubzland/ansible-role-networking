@@ -9,3 +9,21 @@
         - "default.yml"
       paths:
         - vars
+
+- name: determine if proxmox is installed
+  package_facts:
+    manager: "auto"
+  tags: network
+
+- name: assemble list of packages to be installed
+  set_fact:
+    dubzland_network_packages_combined: '{{
+      dubzland_network_base_packages |
+      union(dubzland_network_dynamic_packages) |
+      union(dubzland_network_packages) | unique
+    }}'
+  tags: network
+
+- name: set the list of dynamic packages
+  set_fact:
+    dubzland_network_dynamic_packages: "{{ lookup('template', 'lookups/_network_dynamic_packages.j2', convert_data=False) | from_yaml }}"
