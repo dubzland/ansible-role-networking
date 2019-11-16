@@ -1,6 +1,9 @@
 {% set network_dynamic_packages_tpl = [] %}
-{% if network_interfaces|d() %}
-{%   for iface in network_interfaces %}
+{% if (ansible_env.container | default('')) != 'docker' %}
+{%   set _ = network_dynamic_packages_tpl.append('resolvconf') %}
+{% endif %}
+{% if dubzland_network_interfaces|d() %}
+{%   for iface in dubzland_network_interfaces %}
 {%     if (iface.state | d('present') == 'present' and iface.type | d()) %}
 {%       if iface.type == 'vlan' and packages['proxmox-ve'] is not defined %}
 {%         set _ = network_dynamic_packages_tpl.append('vlan') %}

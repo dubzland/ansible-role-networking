@@ -1,0 +1,14 @@
+---
+dubzland_network_base_packages:
+  - iproute2
+  - bsdutils
+  - rsync
+
+dubzland_network_dynamic_packages: '{{ lookup("template", "lookups/_network_dynamic_packages.j2", convert_data=False) | from_yaml }}'
+dubzland_network_interface_weights: {
+  "eth": '10',
+  "bond": '20',
+  "bridge": '30',
+  "ucarp": '40',
+  "vlan": '50'
+}

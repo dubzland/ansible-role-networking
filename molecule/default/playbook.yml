@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  roles:
+    - role: dubzland-network
+      vars:
+        dubzland_network_interfaces:
+          - name: eth1
+            type: eth
+            inet: static
+            address: 10.1.1.2/24
+            gateway: 10.1.1.1
