@@ -1,8 +1,0 @@
-version: "3"
-services:
-  debian:
-    build:
-      context: ../.
-      dockerfile: tests/Dockerfile.debian
-    volumes:
-      - ../:/usr/src/dubzland-network
