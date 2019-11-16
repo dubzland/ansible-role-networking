@@ -5,7 +5,7 @@
 {% if dubzland_network_interfaces|d() %}
 {%   for iface in dubzland_network_interfaces %}
 {%     if (iface.state | d('present') == 'present' and iface.type | d()) %}
-{%       if iface.type == 'vlan' and 'proxmox-ve' not in (packages | d([]) %}
+{%       if iface.type == 'vlan' and packages is defined and 'proxmox-ve' not in packages %}
 {%         set _ = network_dynamic_packages_tpl.append('vlan') %}
 {%       elif iface.type == 'bridge' %}
 {%         set _ = network_dynamic_packages_tpl.append('bridge-utils') %}
