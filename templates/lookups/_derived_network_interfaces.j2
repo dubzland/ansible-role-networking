@@ -61,6 +61,11 @@
 {%         set _ = primary.options.append("ucarp-master " + ("yes" if iface.ucarp.master else "no")) %}
 {%       endif %}
 {%     endif %}
+{%     if iface.extra_options is defined and iface.extra_options | length > 0 %}
+{%       for option in iface.extra_options %}
+{%         set _ = primary.options.append(option) %}
+{%       endfor %}
+{%     endif %}
 {%     set _ = interface.update({"primary": primary}) %}
 {%     set _ = derived_network_interfaces_tpl.append(interface) %}
 {%   endfor %}
