@@ -4,11 +4,11 @@
   vars:
     params:
       files:
-        - "{{ ansible_os_family }}-{{ ansible_distribution }}.yml"
-        - "{{ ansible_os_family }}.yml"
+        - "{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml"
+        - "{{ ansible_distribution }}.yml"
         - "default.yml"
       paths:
-        - vars
+        - "{{ role_path }}/vars"
 
 - name: determine if proxmox is installed
   package_facts:
@@ -17,13 +17,13 @@
 
 - name: set the list of dynamic packages
   set_fact:
-    dubzland_network_dynamic_packages: "{{ lookup('template', 'lookups/_network_dynamic_packages.j2', convert_data=False) | from_yaml }}"
+    dubzland_networking_dynamic_packages: "{{ lookup('template', 'lookups/_network_dynamic_packages.j2', convert_data=False) | from_yaml }}"
 
 - name: assemble list of packages to be installed
   set_fact:
-    dubzland_network_packages_combined: '{{
-      dubzland_network_base_packages |
-      union(dubzland_network_dynamic_packages) |
-      union(dubzland_network_packages) | unique
+    dubzland_networking_packages_combined: '{{
+      dubzland_networking_base_packages |
+      union(dubzland_networking_dynamic_packages) |
+      union(dubzland_networking_packages) | unique
     }}'
   tags: network

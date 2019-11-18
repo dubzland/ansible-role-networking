@@ -1,6 +1,6 @@
 ---
 - name: install required packages
   package:
-    name: '{{ dubzland_network_packages_combined }}'
+    name: '{{ dubzland_networking_packages_combined }}'
     state: present
   tags: network

@@ -1,3 +1,46 @@
 ---
-dubzland_network_packages: []
-dubzland_network_interfaces: []
+dubzland_networking_packages: []
+
+#
+# dubzland_networking_interfaces:
+#   - name: eth0
+#     type: eth
+#     inet: static
+#     address: 10.0.1.1/24
+#     ucarp:
+#       gateway: 99.101.1.210
+#       vip: 99.101.1.210/29
+#       vid: 100
+#       password: sekret
+#       advskew: 1
+#       advbase: 1
+#       master: yes
+#   - name: eth1
+#     type: eth
+#     inet: manual
+#   - name: vmbr0
+#     type: bridge
+#     inet: manual
+#     bridge_ports:
+#       - eth1
+#     bridge_stp: off
+#     bridge_fd: 0
+#     bridge_vlan_aware: yes
+#   - name: eth2
+#     type: eth
+#     inet: manual
+#   - name: eth3
+#     type: eth
+#     inet: manual
+#   - name: bond0
+#     type: bond
+#     inet: static
+#     address: 192.168.0.1/24
+#     bond_slaves:
+#       - eth2
+#       - eth3
+#     bond_mode: 802.3ad
+#     bond_miimon: 100
+#     bond_lacp_rate: 1
+#
+dubzland_networking_interfaces: []

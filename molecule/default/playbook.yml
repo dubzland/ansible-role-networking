@@ -2,9 +2,9 @@
 - name: Converge
   hosts: all
   roles:
-    - role: dubzland-network
+    - role: ansible-role-networking
       vars:
-        dubzland_network_interfaces:
+        dubzland_networking_interfaces:
           - name: eth1
             type: eth
             inet: static

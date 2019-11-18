@@ -1,7 +1,7 @@
-{% set derived_network_interfaces_tpl = [] %}
-{% if dubzland_network_interfaces | d() %}
-{%   for iface in dubzland_network_interfaces %}
-{%     set interface = {"name": iface.name, "weight": dubzland_network_interface_weights[iface.type | d('eth')], "aliases": []} %}
+{% set derived_networking_interfaces_tpl = [] %}
+{% if dubzland_networking_interfaces | d() %}
+{%   for iface in dubzland_networking_interfaces %}
+{%     set interface = {"name": iface.name, "weight": dubzland_networking_interface_weights[iface.type | d('eth')], "aliases": []} %}
 {%     set primary = {"name": iface.name, "inet": iface.inet} %}
 {%     set _ = primary.update({"auto": iface.auto | d('yes')}) %}
 {%     set _ = primary.update({"aliases": [], "options": []}) %}
@@ -46,7 +46,7 @@
 {%     if iface.ucarp | d() %}
 {%       if (iface.ucarp.vid | d()) and (iface.ucarp.vip | d()) and (iface.ucarp.password | d()) and (iface.ucarp.advskew | d()) and (iface.ucarp.advbase | d()) %}
 {%         set ucarp_iface = {"name": iface.name + ":ucarp", "auto": "no",
-  "inet": "static", "weight": dubzland_network_interface_weights.ucarp, "options": []} %}
+  "inet": "static", "weight": dubzland_networking_interface_weights.ucarp, "options": []} %}
 {%         set _ = ucarp_iface.options.append("address " + (iface.ucarp.vip | ipaddr('address'))) %}
 {%         set _ = ucarp_iface.options.append("netmask " + (iface.ucarp.vip | ipaddr('netmask'))) %}
 {%         if (iface.ucarp.gateway | d()) %}
@@ -67,7 +67,7 @@
 {%       endfor %}
 {%     endif %}
 {%     set _ = interface.update({"primary": primary}) %}
-{%     set _ = derived_network_interfaces_tpl.append(interface) %}
+{%     set _ = derived_networking_interfaces_tpl.append(interface) %}
 {%   endfor %}
 {% endif %}
-{{ derived_network_interfaces_tpl | to_yaml }}
+{{ derived_networking_interfaces_tpl | to_yaml }}

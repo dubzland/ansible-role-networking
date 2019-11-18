@@ -1,10 +1,10 @@
 ---
-dubzland_network_base_packages:
+dubzland_networking_base_packages:
   - iproute2
   - bsdutils
   - rsync
 
-dubzland_network_interface_weights: {
+dubzland_networking_interface_weights: {
   "eth": '10',
   "bond": '20',
   "bridge": '30',

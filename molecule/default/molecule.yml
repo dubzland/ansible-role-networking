@@ -6,25 +6,27 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: dubzland-network-debian9
+  - name: dubzland-networking-debian9
     image: jdubz/docker-ansible-debian9:latest
+    networks:
+      - name: dubzland-network-1
+      - name: dubzland-network-2
+    network_cli_compatible: True
     override_command: False
+    pre_build_image: True
+    privileged: True
+    purge_networks: true
     tmpfs:
       - /run
       - /run/lock
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    networks:
-      - name: dubzland-network-1
-      - name: dubzland-network-2
-    pre_build_image: True
-    privileged: True
-    purge_networks: true
-  - name: dubzland-network-debian10
+  - name: dubzland-networking-debian10
     image: jdubz/docker-ansible-debian10:latest
     networks:
       - name: dubzland-network-1
       - name: dubzland-network-2
+    network_cli_compatible: True
     override_command: False
     pre_build_image: True
     privileged: True
@@ -39,8 +41,6 @@ provisioner:
   name: ansible
   lint:
     name: ansible-lint
-  playbooks:
-    converge: ${MOLECULE_PLAYBOOK:-playbook.yml}
 verifier:
   name: testinfra
   lint:
